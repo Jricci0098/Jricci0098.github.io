@@ -1,0 +1,106 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import ArtPanel from "@/components/ArtPanel.astro";
+import Icon from "@/components/Icon.astro";
+import type { ArtVisual } from "@/components/ArtPanel.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  visual: ArtVisual;
+  eyebrow: string;
+  sections: { id: string; label: string }[];
+  tags: string[];
+  sourceUrl?: string;
+  demoUrl?: string;
+  backHref: string;
+  backLabel: string;
+}
+
+const {
+  title,
+  description,
+  path,
+  visual,
+  eyebrow,
+  sections,
+  tags,
+  sourceUrl,
+  demoUrl,
+  backHref,
+  backLabel,
+} = Astro.props;
+---
+
+<BaseLayout title={title} description={description} path={path}>
+  <ArtPanel visual={visual} class="h-56 w-full sm:h-72" />
+
+  <div class="container-page py-12">
+    <a
+      href={backHref}
+      class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition-colors hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-300"
+    >
+      <Icon name="chevron-left" class="h-4 w-4" aria-hidden="true" />
+      {backLabel}
+    </a>
+
+    <div class="mt-4">
+      <p class="eyebrow mb-3">{eyebrow}</p>
+      <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+        {title}
+      </h1>
+      <p class="body-muted mt-3 max-w-3xl text-lg">{description}</p>
+
+      <div class="mt-5 flex flex-wrap items-center gap-3">
+        <ul class="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <li class="rounded-full bg-brand-500/10 px-3 py-1 text-xs font-medium text-brand-700 dark:text-brand-300">
+              {tag}
+            </li>
+          ))}
+        </ul>
+        {demoUrl && (
+          <a href={demoUrl} class="btn-secondary" target="_blank" rel="noopener noreferrer">
+            <Icon name="external-link" class="h-4 w-4" aria-hidden="true" />
+            View Demo
+          </a>
+        )}
+        <span class="inline-flex items-center gap-1.5 text-sm text-slate-500">
+          <Icon name="folder-open" class="h-4 w-4" aria-hidden="true" />
+          {sourceUrl ? (
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-brand-600 dark:hover:text-brand-300"
+            >
+              Source Code
+            </a>
+          ) : (
+            "Source available on request"
+          )}
+        </span>
+      </div>
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[220px_1fr]">
+      <nav class="hidden lg:block" aria-label="Case study sections">
+        <div class="sticky top-24 flex flex-col gap-1 border-l border-slate-200 pl-4 dark:border-navy-700/70">
+          {sections.map((section) => (
+            <a
+              href={`#${section.id}`}
+              class="rounded-md py-1.5 text-sm text-slate-500 transition-colors hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-300"
+            >
+              {section.label}
+            </a>
+          ))}
+        </div>
+      </nav>
+
+      <article class="prose prose-slate max-w-none dark:prose-invert prose-headings:scroll-mt-24 prose-headings:font-bold prose-a:text-brand-600 dark:prose-a:text-brand-300 prose-code:text-brand-700 dark:prose-code:text-brand-300">
+        <slot />
+      </article>
+    </div>
+  </div>
+</BaseLayout>

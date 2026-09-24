@@ -1,0 +1,122 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Icon, { type IconName } from "@/components/Icon.astro";
+import { siteConfig } from "@/config/site";
+import { certifications } from "@/data/certifications";
+import { focusAreas } from "@/data/about";
+import { technologies } from "@/data/technologies";
+
+const featuredTech = technologies.filter((t) => t.featured);
+---
+
+<BaseLayout
+  title="Résumé"
+  description="Web résumé summarizing focus areas, certifications, and core technical strengths."
+  path="/resume"
+>
+  <PageHeader eyebrow="Résumé" title={siteConfig.name} subtitle={siteConfig.role} />
+
+  <section class="container-page pb-10">
+    <div class="card-surface flex flex-col items-start justify-between gap-4 p-6 sm:flex-row sm:items-center">
+      <div>
+        <h2 class="font-semibold text-slate-900 dark:text-white">Download a PDF copy</h2>
+        <p class="body-muted mt-1 text-sm">
+          {siteConfig.resumePdfPath
+            ? "Get a print-ready version of this résumé."
+            : "A downloadable PDF isn't configured for this deployment yet — set resumePdfPath in src/config/site.ts once one is available."}
+        </p>
+      </div>
+      {siteConfig.resumePdfPath ? (
+        <a href={siteConfig.resumePdfPath} class="btn-primary" download>
+          <Icon name="download" class="h-4 w-4" aria-hidden="true" />
+          Download PDF
+        </a>
+      ) : (
+        <button
+          type="button"
+          class="btn-secondary cursor-not-allowed opacity-60"
+          disabled
+          aria-disabled="true"
+        >
+          <Icon name="download" class="h-4 w-4" aria-hidden="true" />
+          PDF Not Yet Available
+        </button>
+      )}
+    </div>
+  </section>
+
+  <section class="container-page pb-16">
+    <p class="eyebrow mb-2">Summary</p>
+    <h2 class="section-heading mb-4">Professional Summary</h2>
+    <p class="body-muted max-w-3xl text-lg leading-relaxed">{siteConfig.description}</p>
+  </section>
+
+  <section class="border-y border-slate-200 bg-white py-16 dark:border-navy-800/70 dark:bg-navy-900/30">
+    <div class="container-page">
+      <p class="eyebrow mb-2">Core Strengths</p>
+      <h2 class="section-heading mb-8">Focus Areas</h2>
+      <div class="flex flex-wrap gap-3">
+        {focusAreas.map((area) => (
+          <span class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 dark:border-navy-600 dark:bg-navy-900/50 dark:text-slate-200">
+            <Icon
+              name={area.icon as IconName}
+              class="h-4 w-4 text-brand-600 dark:text-brand-300"
+              aria-hidden="true"
+            />
+            {area.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-16">
+    <p class="eyebrow mb-2">Credentials</p>
+    <h2 class="section-heading mb-8">Certifications</h2>
+    <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {certifications
+        .filter((c) => !c.placeholder)
+        .map((cert) => (
+          <li class="card-surface flex items-center gap-3 p-4">
+            <Icon
+              name={cert.icon as IconName}
+              class="h-5 w-5 text-brand-600 dark:text-brand-300"
+              aria-hidden="true"
+            />
+            <div>
+              <p class="font-medium text-slate-900 dark:text-white">
+                {cert.abbreviation} — {cert.name}
+              </p>
+              <p class="text-xs text-slate-500">{cert.issuer}</p>
+            </div>
+          </li>
+        ))}
+    </ul>
+  </section>
+
+  <section class="border-t border-slate-200 py-16 dark:border-navy-800/70">
+    <div class="container-page">
+      <p class="eyebrow mb-2">Toolset</p>
+      <h2 class="section-heading mb-8">Key Technologies</h2>
+      <div class="flex flex-wrap gap-2">
+        {featuredTech.map((tech) => (
+          <span class="rounded-full bg-brand-500/10 px-3.5 py-1.5 text-sm font-medium text-brand-700 dark:text-brand-300">
+            {tech.name}
+          </span>
+        ))}
+      </div>
+      <p class="body-muted mt-6 text-sm">
+        See the full{" "}
+        <a href="/projects" class="text-brand-600 underline underline-offset-2 dark:text-brand-300">
+          project case studies
+        </a>{" "}
+        and{" "}
+        <a href="/" class="text-brand-600 underline underline-offset-2 dark:text-brand-300">
+          technology breakdown
+        </a>{" "}
+        for detail on how each of these is applied in practice.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

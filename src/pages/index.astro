@@ -1,0 +1,115 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Hero from "@/components/Hero.astro";
+import MetricsBand from "@/components/MetricsBand.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import TechGrid from "@/components/TechGrid.astro";
+import CertCard from "@/components/CertCard.astro";
+import WritingCard from "@/components/WritingCard.astro";
+import LifeCard from "@/components/LifeCard.astro";
+import Icon from "@/components/Icon.astro";
+import { certifications } from "@/data/certifications";
+import { lifeCategories } from "@/data/life";
+
+const allProjects = await getCollection("projects");
+const featuredProjects = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const allWriting = await getCollection("writing", ({ data }) => !data.draft);
+const recentWriting = allWriting
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+  .slice(0, 3);
+
+const lifePreview = lifeCategories.slice(0, 4);
+---
+
+<BaseLayout title="Secure Systems. Stronger People." path="/">
+  <Hero />
+  <MetricsBand />
+
+  <section class="container-page py-20">
+    <div class="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="eyebrow mb-2">Selected Work</p>
+        <h2 class="section-heading">Featured Projects</h2>
+      </div>
+      <a href="/projects" class="btn-secondary">
+        All Projects
+        <Icon name="arrow-right" class="h-4 w-4" aria-hidden="true" />
+      </a>
+    </div>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {featuredProjects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </section>
+
+  <section class="border-y border-slate-200 bg-white py-20 dark:border-navy-800/70 dark:bg-navy-900/30">
+    <div class="container-page">
+      <div class="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="eyebrow mb-2">Skillset</p>
+          <h2 class="section-heading">Tech I Work With</h2>
+        </div>
+        <a href="/projects" class="btn-secondary">
+          See It In Action
+          <Icon name="arrow-right" class="h-4 w-4" aria-hidden="true" />
+        </a>
+      </div>
+      <TechGrid />
+    </div>
+  </section>
+
+  <section class="container-page py-20">
+    <div class="mb-10">
+      <p class="eyebrow mb-2">Credentials</p>
+      <h2 class="section-heading">Certifications</h2>
+    </div>
+    <div class="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
+      {certifications.map((cert) => (
+        <CertCard cert={cert} />
+      ))}
+    </div>
+  </section>
+
+  <section class="border-y border-slate-200 bg-white py-20 dark:border-navy-800/70 dark:bg-navy-900/30">
+    <div class="container-page">
+      <div class="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="eyebrow mb-2">Latest Thinking</p>
+          <h2 class="section-heading">Writing</h2>
+        </div>
+        <a href="/writing" class="btn-secondary">
+          All Articles
+          <Icon name="arrow-right" class="h-4 w-4" aria-hidden="true" />
+        </a>
+      </div>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {recentWriting.map((article) => (
+          <WritingCard article={article} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-20">
+    <div class="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p class="eyebrow mb-2">Beyond the Console</p>
+        <h2 class="section-heading">Life Outside Cyber</h2>
+      </div>
+      <a href="/life" class="btn-secondary">
+        More
+        <Icon name="arrow-right" class="h-4 w-4" aria-hidden="true" />
+      </a>
+    </div>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {lifePreview.map((category) => (
+        <LifeCard category={category} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

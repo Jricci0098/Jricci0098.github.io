@@ -1,0 +1,216 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Icon, { type IconName } from "@/components/Icon.astro";
+import { labStats, labTechnologies, labSections } from "@/data/lab";
+
+const categories = [
+  "Infrastructure",
+  "Networking & Security",
+  "Monitoring",
+  "DevSecOps",
+  "Data",
+  "AI",
+] as const;
+---
+
+<BaseLayout
+  title="Cyber Lab"
+  description="A self-hosted Proxmox environment with segmented networking, Suricata-based monitoring, and a self-hosted DevSecOps pipeline — the live testbed behind the projects and writing on this site."
+  path="/lab"
+>
+  <PageHeader
+    eyebrow="Hands-On Environment"
+    title="Cyber Lab"
+    subtitle="A self-hosted testbed for enterprise security patterns — segmented networking, detection engineering, and DevSecOps automation, built and rebuilt continuously."
+  />
+
+  <section class="container-page pb-16">
+    <div class="grid grid-cols-2 gap-5 sm:grid-cols-4">
+      {labStats.map((stat) => (
+        <div class="card-surface flex flex-col items-center gap-2 p-6 text-center">
+          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-300">
+            <Icon name={stat.icon as IconName} class="h-5 w-5" aria-hidden="true" />
+          </span>
+          <p class="text-2xl font-bold text-slate-900 dark:text-white">{stat.value}</p>
+          <p class="text-xs text-slate-500">{stat.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-y border-slate-200 bg-white py-16 dark:border-navy-800/70 dark:bg-navy-900/30">
+    <div class="container-page grid grid-cols-1 gap-10 lg:grid-cols-2">
+      {labSections.map((section) => (
+        <div>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-white">{section.title}</h2>
+          <p class="body-muted mt-2 text-sm leading-relaxed">{section.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-page py-16">
+    <div class="mb-10">
+      <p class="eyebrow mb-2">Stack</p>
+      <h2 class="section-heading">Lab Technologies</h2>
+    </div>
+    {categories.map((category) => {
+      const items = labTechnologies.filter((t) => t.category === category);
+      if (items.length === 0) return null;
+      return (
+        <div class="mb-10">
+          <h3 class="mb-4 text-sm font-semibold tracking-wide text-slate-500 uppercase dark:text-slate-400">
+            {category}
+          </h3>
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((tech) => (
+              <div class="card-surface card-hover flex items-start gap-3 p-5">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-500/10 text-brand-600 dark:text-brand-300">
+                  <Icon name={tech.icon as IconName} class="h-5 w-5" aria-hidden="true" />
+                </span>
+                <div>
+                  <h4 class="font-semibold text-slate-900 dark:text-white">{tech.name}</h4>
+                  <p class="body-muted mt-1 text-sm">{tech.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    })}
+  </section>
+
+  <section class="border-t border-slate-200 py-16 dark:border-navy-800/70">
+    <div class="container-page">
+      <p class="eyebrow mb-2">Topology</p>
+      <h2 class="section-heading mb-8">Architecture Diagram</h2>
+      <div class="card-surface overflow-hidden p-8">
+        <svg viewBox="0 0 900 380" class="w-full" role="img" aria-labelledby="lab-diagram-title">
+          <title id="lab-diagram-title">
+            Simplified lab network diagram showing perimeter firewall, segmented VLANs for management, lab
+            workloads, and IoT, a hypervisor cluster, and a monitoring stack. Example topology only — no real
+            IPs or hostnames.
+          </title>
+          <g fill="none" stroke="#2fc7ff" stroke-width="1.5" opacity="0.5">
+            <line x1="450" y1="60" x2="450" y2="130" />
+            <line x1="450" y1="130" x2="180" y2="200" />
+            <line x1="450" y1="130" x2="450" y2="200" />
+            <line x1="450" y1="130" x2="720" y2="200" />
+            <line x1="180" y1="240" x2="180" y2="300" />
+            <line x1="450" y1="240" x2="450" y2="300" />
+            <line x1="720" y1="240" x2="720" y2="300" />
+          </g>
+          <g>
+            <rect
+              x="380"
+              y="20"
+              width="140"
+              height="40"
+              rx="8"
+              class="fill-navy-800"
+              stroke="#2fc7ff"
+            />
+            <text x="450" y="45" text-anchor="middle" class="fill-slate-200" font-size="13">
+              Internet Edge
+            </text>
+
+            <rect
+              x="380"
+              y="90"
+              width="140"
+              height="40"
+              rx="8"
+              class="fill-navy-800"
+              stroke="#2fc7ff"
+            />
+            <text x="450" y="115" text-anchor="middle" class="fill-slate-200" font-size="13">
+              pfSense Firewall
+            </text>
+
+            <rect
+              x="90"
+              y="200"
+              width="180"
+              height="40"
+              rx="8"
+              class="fill-navy-800"
+              stroke="#2dd4bf"
+            />
+            <text x="180" y="225" text-anchor="middle" class="fill-slate-200" font-size="12">
+              VLAN: Management
+            </text>
+
+            <rect
+              x="360"
+              y="200"
+              width="180"
+              height="40"
+              rx="8"
+              class="fill-navy-800"
+              stroke="#2dd4bf"
+            />
+            <text x="450" y="225" text-anchor="middle" class="fill-slate-200" font-size="12">
+              VLAN: Lab Workloads
+            </text>
+
+            <rect
+              x="630"
+              y="200"
+              width="180"
+              height="40"
+              rx="8"
+              class="fill-navy-800"
+              stroke="#2dd4bf"
+            />
+            <text x="720" y="225" text-anchor="middle" class="fill-slate-200" font-size="12">
+              VLAN: IoT
+            </text>
+
+            <rect
+              x="90"
+              y="300"
+              width="180"
+              height="40"
+              rx="8"
+              class="fill-navy-900"
+              stroke="#35597c"
+            />
+            <text x="180" y="325" text-anchor="middle" class="fill-slate-400" font-size="12">
+              Monitoring Stack
+            </text>
+
+            <rect
+              x="360"
+              y="300"
+              width="180"
+              height="40"
+              rx="8"
+              class="fill-navy-900"
+              stroke="#35597c"
+            />
+            <text x="450" y="325" text-anchor="middle" class="fill-slate-400" font-size="12">
+              Proxmox Cluster
+            </text>
+
+            <rect
+              x="630"
+              y="300"
+              width="180"
+              height="40"
+              rx="8"
+              class="fill-navy-900"
+              stroke="#35597c"
+            />
+            <text x="720" y="325" text-anchor="middle" class="fill-slate-400" font-size="12">
+              Edge Devices
+            </text>
+          </g>
+        </svg>
+        <p class="body-muted mt-4 text-center text-xs">
+          Simplified, illustrative topology. No real IP addresses, hostnames, or credentials.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

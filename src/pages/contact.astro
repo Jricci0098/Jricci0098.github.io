@@ -1,0 +1,129 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Icon from "@/components/Icon.astro";
+import BrandIcon from "@/components/BrandIcon.astro";
+import { siteConfig, getVisibleSocialLinks, isSameOriginFormEndpoint } from "@/config/site";
+
+const visibleSocialLinks = getVisibleSocialLinks();
+const formEndpoint = siteConfig.contactFormEndpoint;
+const canRenderForm = isSameOriginFormEndpoint(formEndpoint);
+
+if (formEndpoint && !canRenderForm) {
+  // Fails the build loud rather than silently shipping a form the CSP's form-action 'self' will block at submit time.
+  throw new Error(
+    `siteConfig.contactFormEndpoint ("${formEndpoint}") must be a same-origin absolute path (e.g. "/api/contact") — the deployed CSP sets form-action 'self', so a third-party URL would be blocked by the browser at submit time. Use a same-origin path, or leave contactFormEndpoint null.`,
+  );
+}
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch directly — email or connect on GitHub and LinkedIn."
+  path="/contact"
+>
+  <PageHeader
+    eyebrow="Get in Touch"
+    title="Let's Build Something Secure Together"
+    subtitle="The fastest way to reach me is direct — no forms, no middlemen. Pick whichever channel works best for you."
+  />
+
+  <section class="container-page pb-24">
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {visibleSocialLinks.map((link) => (
+        <a
+          href={link.href}
+          class="card-surface card-hover flex flex-col items-start gap-3 p-6"
+          target={link.href.startsWith("http") ? "_blank" : undefined}
+          rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+        >
+          <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-500/10 text-brand-600 dark:text-brand-300">
+            {link.icon === "github" || link.icon === "linkedin" ? (
+              <BrandIcon name={link.icon} class="h-5 w-5" />
+            ) : (
+              <Icon name={link.icon} class="h-5 w-5" aria-hidden="true" />
+            )}
+          </span>
+          <div>
+            <h2 class="font-semibold text-slate-900 dark:text-white">{link.label}</h2>
+            <p class="body-muted mt-1 text-sm break-all">{link.href.replace("mailto:", "")}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    {canRenderForm && formEndpoint ? (
+      <form class="card-surface mt-12 max-w-xl space-y-4 p-8" method="POST" action={formEndpoint}>
+        <div>
+          <label
+            for="name"
+            class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200"
+          >
+            Name
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 dark:border-navy-600 dark:bg-navy-900/60 dark:text-white"
+          />
+        </div>
+        <div>
+          <label
+            for="email"
+            class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200"
+          >
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 dark:border-navy-600 dark:bg-navy-900/60 dark:text-white"
+          />
+        </div>
+        <div>
+          <label
+            for="message"
+            class="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200"
+          >
+            Message
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 dark:border-navy-600 dark:bg-navy-900/60 dark:text-white"
+          ></textarea>
+        </div>
+        <button type="submit" class="btn-primary w-full">
+          Send Message
+          <Icon name="send" class="h-4 w-4" aria-hidden="true" />
+        </button>
+      </form>
+    ) : (
+      <div class="card-surface mt-12 max-w-xl p-8 text-center">
+        <p class="body-muted text-sm">
+          A contact form isn't configured for this deployment yet. Set{" "}
+          <code class="rounded bg-brand-500/10 px-1.5 py-0.5 text-brand-700 dark:text-brand-300">
+            contactFormEndpoint
+          </code>{" "}
+          in{" "}
+          <code class="rounded bg-brand-500/10 px-1.5 py-0.5 text-brand-700 dark:text-brand-300">
+            src/config/site.ts
+          </code>{" "}
+          to a same-origin, CSRF-protected submission path (e.g. "/api/contact") to enable one — the
+          deployed CSP's{" "}
+          <code class="rounded bg-brand-500/10 px-1 py-0.5 text-brand-700 dark:text-brand-300">
+            form-action 'self'
+          </code>{" "}
+          rejects third-party endpoints by design. Until then, please reach out directly using the
+          options above.
+        </p>
+      </div>
+    )}
+  </section>
+</BaseLayout>

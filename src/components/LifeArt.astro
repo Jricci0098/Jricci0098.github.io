@@ -1,0 +1,39 @@
+---
+/**
+ * Abstract editorial-style artwork per life category — local CSS gradients + a large
+ * translucent icon motif with a dark overlay. No identifiable photos, no external images.
+ */
+import Icon, { type IconName } from "./Icon.astro";
+import type { LifeCategory } from "@/data/life";
+
+interface Props {
+  visual: LifeCategory["visual"];
+  icon: string;
+  class?: string;
+}
+
+const { visual, icon, class: className } = Astro.props;
+
+const gradients: Record<LifeCategory["visual"], string> = {
+  faith: "from-amber-500/30 via-navy-800 to-navy-950",
+  family: "from-rose-500/25 via-navy-800 to-navy-950",
+  fitness: "from-red-500/25 via-navy-800 to-navy-950",
+  hiking: "from-emerald-500/25 via-navy-800 to-navy-950",
+  guitar: "from-orange-500/25 via-navy-800 to-navy-950",
+  gardening: "from-lime-500/20 via-navy-800 to-navy-950",
+  travel: "from-brand-500/30 via-navy-800 to-navy-950",
+  "home-projects": "from-teal-accent/25 via-navy-800 to-navy-950",
+};
+---
+
+<div
+  class:list={[
+    "relative flex items-center justify-center overflow-hidden bg-gradient-to-br",
+    gradients[visual],
+    className,
+  ]}
+  aria-hidden="true"
+>
+  <Icon name={icon as IconName} class="h-14 w-14 text-white/40" aria-hidden="true" />
+  <div class="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent"></div>
+</div>

@@ -1,0 +1,67 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Icon from "@/components/Icon.astro";
+import { calculateReadingTime, formatDate } from "@/lib/reading-time";
+
+export async function getStaticPaths() {
+  const articles = await getCollection("writing", ({ data }) => !data.draft);
+  return articles.map((article) => ({
+    params: { id: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const { title, description, publishDate, category, tags, readingTimeMinutes } = article.data;
+const minutes = readingTimeMinutes ?? calculateReadingTime(article.body ?? description);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={`/writing/${article.id}`}
+  type="article"
+  publishDate={publishDate}
+>
+  <div class="container-page py-16">
+    <a
+      href="/writing"
+      class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition-colors hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-300"
+    >
+      <Icon name="chevron-left" class="h-4 w-4" aria-hidden="true" />
+      All Articles
+    </a>
+
+    <header class="mt-6 max-w-3xl">
+      <p class="eyebrow mb-3">{category}</p>
+      <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+        {title}
+      </h1>
+      <p class="body-muted mt-3 text-lg">{description}</p>
+      <div class="mt-5 flex items-center gap-4 text-sm text-slate-500">
+        <span class="inline-flex items-center gap-1.5">
+          <Icon name="calendar-clock" class="h-4 w-4" aria-hidden="true" />
+          <time datetime={publishDate.toISOString()}>{formatDate(publishDate)}</time>
+        </span>
+        <span class="inline-flex items-center gap-1.5">
+          <Icon name="clock" class="h-4 w-4" aria-hidden="true" />
+          {minutes} min read
+        </span>
+      </div>
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <li class="inline-flex items-center gap-1 rounded-full bg-brand-500/10 px-3 py-1 text-xs font-medium text-brand-700 dark:text-brand-300">
+            <Icon name="tags" class="h-3 w-3" aria-hidden="true" />
+            {tag}
+          </li>
+        ))}
+      </ul>
+    </header>
+
+    <article class="prose prose-slate mt-10 max-w-3xl dark:prose-invert prose-headings:scroll-mt-24 prose-headings:font-bold prose-a:text-brand-600 dark:prose-a:text-brand-300 prose-code:text-brand-700 dark:prose-code:text-brand-300">
+      <Content />
+    </article>
+  </div>
+</BaseLayout>

@@ -1,0 +1,74 @@
+---
+import { siteConfig } from "@/config/site";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Relative path, e.g. "/projects/azure-policy-compliance-reporting" */
+  path?: string;
+  type?: "website" | "article";
+  publishDate?: Date;
+  /** Set true for error/utility pages (e.g. 404) — omits the canonical link and blocks indexing. */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = siteConfig.description,
+  path = Astro.url.pathname,
+  type = "website",
+  publishDate,
+  noindex = false,
+} = Astro.props;
+
+const canonicalURL = new URL(path, siteConfig.url).toString();
+const fullTitle = title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: siteConfig.name,
+  jobTitle: siteConfig.role,
+  url: siteConfig.url,
+  description: siteConfig.description,
+};
+
+const articleJsonLd = publishDate
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: title,
+      description,
+      datePublished: publishDate.toISOString(),
+      author: {
+        "@type": "Person",
+        name: siteConfig.name,
+      },
+      url: canonicalURL,
+    }
+  : null;
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+{noindex ? (
+  <meta name="robots" content="noindex, nofollow" />
+) : (
+  <link rel="canonical" href={canonicalURL} />
+)}
+
+<meta property="og:type" content={type} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:site_name" content={siteConfig.name} />
+
+<!-- "summary" (not summary_large_image) until a real 1200x630 OG/Twitter image is added — see README. -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+
+<script type="application/ld+json" set:html={JSON.stringify(personJsonLd)}></script>
+{articleJsonLd && (
+  <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)}></script>
+)}

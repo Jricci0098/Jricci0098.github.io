@@ -1,0 +1,83 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import Icon, { type IconName } from "@/components/Icon.astro";
+import BrandIcon from "@/components/BrandIcon.astro";
+import { focusAreas, aboutSections, aboutBiography } from "@/data/about";
+import { getVisibleSocialLinks } from "@/config/site";
+
+const visibleSocialLinks = getVisibleSocialLinks();
+---
+
+<BaseLayout
+  title="About"
+  description="Security. Cloud. Automation. Real Impact. A look at the focus areas, mentoring, and continuous learning behind the work."
+  path="/about"
+>
+  <PageHeader eyebrow="About" title="Security. Cloud. Automation. Real Impact." />
+
+  <section class="container-page pb-16">
+    <div class="max-w-3xl space-y-5">
+      {aboutBiography.map((paragraph) => (
+        <p class="body-muted text-lg leading-relaxed">{paragraph}</p>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-y border-slate-200 bg-white py-16 dark:border-navy-800/70 dark:bg-navy-900/30">
+    <div class="container-page">
+      <p class="eyebrow mb-2">Focus Areas</p>
+      <h2 class="section-heading mb-8">Where I Spend My Time</h2>
+      <div class="flex flex-wrap gap-3">
+        {focusAreas.map((area) => (
+          <span class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 dark:border-navy-600 dark:bg-navy-900/50 dark:text-slate-200">
+            <Icon
+              name={area.icon as IconName}
+              class="h-4 w-4 text-brand-600 dark:text-brand-300"
+              aria-hidden="true"
+            />
+            {area.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-16">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
+      {aboutSections.map((section) => (
+        <div class="card-surface p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500/10 text-brand-600 dark:text-brand-300">
+            <Icon name={section.icon as IconName} class="h-5 w-5" aria-hidden="true" />
+          </span>
+          <h3 class="mt-4 text-lg font-semibold text-slate-900 dark:text-white">{section.title}</h3>
+          <p class="body-muted mt-2 text-sm leading-relaxed">{section.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {visibleSocialLinks.length > 0 && (
+    <section class="border-t border-slate-200 py-16 dark:border-navy-800/70">
+      <div class="container-page text-center">
+        <p class="eyebrow mb-2">Connect</p>
+        <h2 class="section-heading mb-6">Let's Talk</h2>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          {visibleSocialLinks.map((link) => (
+            <a
+              href={link.href}
+              class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:border-brand-400/60 hover:text-brand-600 dark:border-navy-600 dark:text-slate-200 dark:hover:text-brand-300"
+            >
+              {link.icon === "github" || link.icon === "linkedin" ? (
+                <BrandIcon name={link.icon} class="h-4 w-4" />
+              ) : (
+                <Icon name={link.icon} class="h-4 w-4" aria-hidden="true" />
+              )}
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

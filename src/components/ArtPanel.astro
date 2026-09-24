@@ -1,0 +1,49 @@
+---
+/**
+ * Local SVG/CSS visual treatment for project cards and case-study headers.
+ * No external image dependency — each "visual" key maps to a gradient + icon motif.
+ */
+import Icon, { type IconName } from "./Icon.astro";
+
+export type ArtVisual =
+  "azure-policy" | "devsecops-pipeline" | "ai-assistant" | "homelab" | "generic";
+
+interface Props {
+  visual: ArtVisual;
+  class?: string;
+}
+
+const { visual, class: className } = Astro.props;
+
+const treatments: Record<ArtVisual, { gradient: string; icon: IconName }> = {
+  "azure-policy": { gradient: "from-brand-600/40 via-navy-800 to-navy-950", icon: "shield-check" },
+  "devsecops-pipeline": {
+    gradient: "from-teal-accent/30 via-navy-800 to-navy-950",
+    icon: "git-merge",
+  },
+  "ai-assistant": { gradient: "from-brand-400/30 via-navy-800 to-navy-950", icon: "sparkles" },
+  homelab: { gradient: "from-brand-700/40 via-navy-800 to-navy-950", icon: "server" },
+  generic: { gradient: "from-brand-500/30 via-navy-800 to-navy-950", icon: "shield" },
+};
+
+const treatment = treatments[visual];
+---
+
+<div
+  class:list={[
+    "relative flex items-center justify-center overflow-hidden bg-gradient-to-br",
+    treatment.gradient,
+    className,
+  ]}
+  aria-hidden="true"
+>
+  <svg class="absolute inset-0 h-full w-full opacity-20" width="100%" height="100%">
+    <defs>
+      <pattern id={`grid-${visual}`} width="28" height="28" patternUnits="userSpaceOnUse">
+        <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#2fc7ff" stroke-width="0.5"></path>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill={`url(#grid-${visual})`}></rect>
+  </svg>
+  <Icon name={treatment.icon} class="relative h-16 w-16 text-brand-300/70" aria-hidden="true" />
+</div>

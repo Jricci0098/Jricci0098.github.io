@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Icon from "./Icon.astro";
+import { calculateReadingTime, formatDate } from "@/lib/reading-time";
+
+interface Props {
+  article: CollectionEntry<"writing">;
+}
+
+const { article } = Astro.props;
+const { title, description, publishDate, category, readingTimeMinutes } = article.data;
+const minutes = readingTimeMinutes ?? calculateReadingTime(article.body ?? description);
+---
+
+<article class="card-surface card-hover relative flex flex-col gap-3 p-6">
+  <span class="eyebrow">{category}</span>
+  <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
+    <a href={`/writing/${article.id}`} class="after:absolute after:inset-0">
+      {title}
+    </a>
+  </h3>
+  <p class="body-muted line-clamp-3 text-sm">{description}</p>
+  <div class="mt-auto flex items-center gap-4 pt-2 text-xs text-slate-500">
+    <span class="inline-flex items-center gap-1.5">
+      <Icon name="calendar-clock" class="h-3.5 w-3.5" aria-hidden="true" />
+      <time datetime={publishDate.toISOString()}>{formatDate(publishDate)}</time>
+    </span>
+    <span class="inline-flex items-center gap-1.5">
+      <Icon name="clock" class="h-3.5 w-3.5" aria-hidden="true" />
+      {minutes} min read
+    </span>
+  </div>
+</article>

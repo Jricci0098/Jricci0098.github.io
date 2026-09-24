@@ -1,0 +1,33 @@
+---
+import type { Certification } from "@/data/certifications";
+import Icon, { type IconName } from "./Icon.astro";
+
+interface Props {
+  cert: Certification;
+}
+
+const { cert } = Astro.props;
+---
+
+<div
+  class:list={[
+    "card-surface flex flex-col items-center gap-3 p-6 text-center",
+    cert.placeholder ? "border-dashed opacity-70" : "card-hover",
+  ]}
+>
+  <span
+    class:list={[
+      "flex h-12 w-12 items-center justify-center rounded-full",
+      cert.placeholder
+        ? "bg-slate-200 text-slate-500 dark:bg-navy-800 dark:text-slate-500"
+        : "bg-brand-500/10 text-brand-600 dark:text-brand-300",
+    ]}
+  >
+    <Icon name={cert.icon as IconName} class="h-6 w-6" aria-hidden="true" />
+  </span>
+  <div>
+    <p class="font-semibold text-slate-900 dark:text-white">{cert.abbreviation}</p>
+    <p class="body-muted mt-1 text-xs">{cert.name}</p>
+    <p class="mt-1 text-xs text-slate-500">{cert.issuer}</p>
+  </div>
+</div>

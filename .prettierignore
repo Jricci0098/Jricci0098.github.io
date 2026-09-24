@@ -1,0 +1,8 @@
+dist/
+.astro/
+node_modules/
+netlify.toml
+package-lock.json
+
+# Preserved verbatim per project instructions — not reformatted.
+BUILD_SPEC.md

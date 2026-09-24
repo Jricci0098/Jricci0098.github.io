@@ -1,0 +1,18 @@
+---
+import type { LifeCategory } from "@/data/life";
+import LifeArt from "./LifeArt.astro";
+
+interface Props {
+  category: LifeCategory;
+}
+
+const { category } = Astro.props;
+---
+
+<article class="card-surface card-hover overflow-hidden">
+  <LifeArt visual={category.visual} icon={category.icon} class="h-48 w-full" />
+  <div class="p-6">
+    <h3 class="text-lg font-semibold text-slate-900 dark:text-white">{category.title}</h3>
+    <p class="body-muted mt-2 text-sm">{category.description}</p>
+  </div>
+</article>

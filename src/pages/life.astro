@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PageHeader from "@/components/PageHeader.astro";
+import LifeCard from "@/components/LifeCard.astro";
+import { lifeCategories } from "@/data/life";
+---
+
+<BaseLayout
+  title="Life Outside Cyber"
+  description="Faith, family, fitness, and the other things that shape how I work — a look outside the console."
+  path="/life"
+>
+  <PageHeader
+    eyebrow="Beyond the Console"
+    title="Life Outside Cyber"
+    subtitle="The work matters more because of what it makes room for. A short look at what fills the rest of the picture."
+  />
+  <div class="container-page pb-24">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {lifeCategories.map((category) => (
+        <LifeCard category={category} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

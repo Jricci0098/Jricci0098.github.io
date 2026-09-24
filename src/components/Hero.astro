@@ -1,0 +1,46 @@
+---
+import { siteConfig } from "@/config/site";
+import { expertiseBadges as badges } from "@/data/metrics";
+import Icon, { type IconName } from "./Icon.astro";
+import HeroArt from "./HeroArt.astro";
+---
+
+<section class="relative overflow-hidden">
+  <HeroArt />
+  <div class="container-page relative py-20 sm:py-28">
+    <div class="max-w-2xl motion-safe:animate-[var(--animate-reveal)]">
+      <p class="eyebrow mb-4">Cybersecurity Architect</p>
+      <h1 class="text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl dark:text-white">
+        Secure Systems. Stronger People.
+      </h1>
+      <p class="body-muted mt-6 text-lg sm:text-xl">
+        I design and build security architecture that holds up under real-world pressure — cloud
+        governance, DevSecOps pipelines, and the automation that lets small teams operate like
+        larger ones. {siteConfig.role} focused on making security an enabler, not a bottleneck.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href="/projects" class="btn-primary">
+          View My Projects
+          <Icon name="arrow-right" class="h-4 w-4" aria-hidden="true" />
+        </a>
+        <a href="/resume" class="btn-secondary">
+          <Icon name="download" class="h-4 w-4" aria-hidden="true" />
+          Download Résumé
+        </a>
+      </div>
+
+      <ul class="mt-10 flex flex-wrap gap-3">
+        {badges.map((badge) => (
+          <li class="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/60 px-3.5 py-1.5 text-sm font-medium text-slate-700 dark:border-navy-600 dark:bg-navy-900/50 dark:text-slate-200">
+            <Icon
+              name={badge.icon as IconName}
+              class="h-4 w-4 text-brand-600 dark:text-brand-300"
+              aria-hidden="true"
+            />
+            {badge.label}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

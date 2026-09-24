@@ -1,0 +1,29 @@
+---
+import type { Technology } from "@/data/technologies";
+import Icon, { type IconName } from "./Icon.astro";
+import ProficiencyMeter from "./ProficiencyMeter.astro";
+
+interface Props {
+  tech: Technology;
+}
+
+const { tech } = Astro.props;
+---
+
+<article
+  class="card-surface card-hover group flex flex-col gap-3 p-5"
+  data-tech-card
+  data-category={tech.category}
+>
+  <div class="flex items-center gap-3">
+    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-500/10 text-brand-300">
+      <Icon name={tech.icon as IconName} class="h-5 w-5" aria-hidden="true" />
+    </span>
+    <div>
+      <h3 class="font-semibold text-slate-900 dark:text-white">{tech.name}</h3>
+      <p class="text-xs text-slate-500">{tech.category}</p>
+    </div>
+  </div>
+  <p class="body-muted text-sm">{tech.description}</p>
+  <ProficiencyMeter level={tech.level} class="mt-auto pt-1" />
+</article>

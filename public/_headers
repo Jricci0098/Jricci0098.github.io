@@ -1,0 +1,25 @@
+# Security headers for Cloudflare Pages (and Netlify, which also reads /_headers).
+# Adjust the CSP if you add third-party embeds — keep it as strict as the embed allows.
+#
+# GitHub Pages CANNOT serve custom response headers at all (no _headers/netlify.toml
+# equivalent) — if you deploy via .github/workflows/deploy-pages.yml instead of
+# Cloudflare Pages or Netlify, none of the headers below will apply. See README.md
+# "Deployment" for details; prefer Cloudflare Pages or Netlify if these headers matter.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+/theme-init.js
+  Cache-Control: public, max-age=300, must-revalidate
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/favicon.svg
+  Cache-Control: public, max-age=86400
