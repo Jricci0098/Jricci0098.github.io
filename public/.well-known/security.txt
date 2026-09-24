@@ -1,9 +1,9 @@
 # This file is static (RFC 9116 requires /.well-known/security.txt to be a
 # plain file, and Astro's router does not scan dot-prefixed directories under
 # src/pages) and therefore cannot import src/config/site.ts. Keep Contact and
-# Canonical below in sync with siteConfig.email / siteConfig.url by hand —
+# Canonical below in sync with siteConfig.url by hand —
 # see README.md "Identity customization" for the full placeholder checklist.
-Contact: mailto:REPLACE_ME@example.com
+Contact: https://github.com/Jricci0098/Jricci0098.github.io/security/advisories/new
 Expires: 2027-01-01T00:00:00.000Z
 Preferred-Languages: en
-Canonical: https://example-portfolio.pages.dev/.well-known/security.txt
+Canonical: https://jricci0098.github.io/.well-known/security.txt

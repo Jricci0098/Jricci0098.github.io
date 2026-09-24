@@ -51,13 +51,17 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   name: "Joseph Ricci",
   role: "Cybersecurity Architect",
-  url: "https://example-portfolio.pages.dev",
+  url: "https://jricci0098.github.io",
   description:
     "Cybersecurity architect focused on cloud security, AI Security, DevSecOps, and building secure systems that scale — and the people who run them.",
   email: "jricci18@gmail.com",
   social: [
     { label: "GitHub", href: "https://github.com/Jricci0098", icon: "github" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/joe-ricci-557ba4216/", icon: "linkedin" },
+    {
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/joe-ricci-557ba4216/",
+      icon: "linkedin",
+    },
     { label: "Email", href: "mailto:jricci18@gmail.com", icon: "mail" },
   ],
   resumePdfPath: null,
